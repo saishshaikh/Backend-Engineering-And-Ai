@@ -1,0 +1,16 @@
+🐳 Complete Docker Commands (Basic + Important)
+
+| Command | Work (Description) |
+| :--- | :--- |
+| `docker pull ubuntu` | Ubuntu image download |
+| `docker images` | All images show |
+| `docker run ubuntu` | Ubuntu container run (quickly exit ho jayega) |
+| `docker run -it ubuntu bash` | Ubuntu terminal open |
+| `exit` | Container se bahar aao |
+| `docker ps` | Running containers list show |
+| `docker ps -a` | All containers (running + stopped) show |
+| `docker stop <container_id>` | Running container ko stop karo |
+| `docker rm <container_id>` | Stopped container ko delete karo |
+| `docker rmi <image_id>` | Docker image ko delete karo |
+| `docker build -t <image_name> .` | Apne code ki Docker image banao |
+| `docker run -p 8080:3000 <image_name>` | Port mapping ke sath container run karo |
