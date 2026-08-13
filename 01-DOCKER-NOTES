@@ -14,3 +14,19 @@
 | `docker rmi <image_id>` | Docker image ko delete karo |
 | `docker build -t <image_name> .` | Apne code ki Docker image banao |
 | `docker run -p 8080:3000 <image_name>` | Port mapping ke sath container run karo |
+
+
+
+How Docker Works (Steps) Table
+
+
+Markdown
+| Step | Process |
+| :--- | :--- |
+| **1** | User command deta hai |
+| **2** | Docker CLI command receive karta hai |
+| **3** | CLI request daemon ko bhejta hai |
+| **4** | Daemon image check karta hai |
+| **5** | Missing image Docker Hub se download hoti hai |
+| **6** | Container create hota hai |
+| **7** | Application run hoti hai
