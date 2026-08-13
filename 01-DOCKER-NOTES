@@ -30,3 +30,139 @@ Markdown
 | **5** | Missing image Docker Hub se download hoti hai |
 | **6** | Container create hota hai |
 | **7** | Application run hoti hai
+
+
+
+
+
+## 1. Docker Run
+
+...bash 
+docker build -t test-image   =  ye command  vs code  me img banane ke liye
+iske agye . lgya means  vc code chnges krne ke bad  img create krnr ke liye 
+
+```bash
+docker run test-image = isko cmd me  use krte he 
+docker exec counter name  bash = use krte he conter me jane ke liye 
+```
+
+
+## 2. Basic Linux Commands
+
+```bash
+ls
+```
+
+→ Current folder ki files/folders dikhata hai.
+
+```bash
+cat index.js
+```
+
+→ `index.js` ka content dikhata hai.
+
+---
+
+## 3. `.dockerignore`
+
+Docker image me unwanted files copy hone se rokta hai.
+
+```text
+node_modules
+.git
+.env
+```
+
+---
+
+## 4. COPY
+
+### `COPY package*.json .`
+
+```dockerfile
+COPY package*.json .
+```
+
+→ `package.json` aur `package-lock.json`  ye jo files jo packege chlu hote he o sab return  coppy krne ki need nhi he 
+
+### `COPY . .`
+
+
+`.dockerignore` isse dockerfile  jojo files nhi dalni he isme likhne se upload nhi hoti contenr me .
+
+---
+
+# 5. Port Mapping
+    vc code k port and conter k port same krt he 
+```bash
+-p 5000:5000
+```
+
+Format:
+
+```text
+-p HOST_PORT:CONTAINER_PORT
+```
+
+Meaning:
+
+```text
+Laptop:5000  →  Container:5000
+```
+
+Browser:
+
+```text
+localhost:5000
+```
+
+**Port mapping = laptop se Docker app port ko access karna.**
+
+---
+
+# 6. Environment Variable
+
+```bash
+-e PORT=5000
+```
+
+→ App ko `PORT` ki value `5000` deta hai.
+
+Code me:
+
+```js
+const PORT = process.env.PORT || 5000;
+```
+
+### Why use `-e`?
+
+Code change kiye bina value/configuration change karne ke liye.
+
+```bash
+-e PORT=7000
+```
+
+→ App ko `7000` port use karne ko bolta hai.
+
+**`-e` = App ki setting/configuration**
+
+Agar port hamesha fixed hai, to `-e` zaroori nahi.
+
+---
+
+# 8. Typical Node.js Docker Run
+
+Agar app `5000` port use karti hai:
+
+```bash
+docker run -p 5000:5000 test-image
+```
+
+Agar `PORT` environment variable se set karna ho:
+
+```bash
+docker run -e PORT=5000 -p 5000:5000 test-image
+```
+
+\
+```
