@@ -254,5 +254,78 @@ Run Container Locally
 The goal is to package an application into a Docker image and **share it through Docker Hub so another user can easily pull and run the application on their own local machine.**
 
 
+🐳 Docker Compose – Build, Run & Push Multiple Containers Together
+What is Docker Compose?
+
+Docker Compose is a tool that allows us to define and manage multiple Docker containers/services using a single compose.yaml file.
+
+Instead of building and running each container one by one, Docker Compose allows us to manage all services together.
+
+For example, our project has:
+
+Frontend
+   +
+Backend
+
+Docker Compose can build and start both containers with a single command.
+
+                Docker Compose
+                      ↓
+          ┌───────────┴───────────┐
+          ↓                       ↓
+      Frontend                  Backend
+      Container                 Container
+
+📁 Project Structure
+
+Example project structure:
+
+PHASE-2/
+│
+├── compose.yaml
+│
+├── BACKEND/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── index.js
+│
+└── FRONTEND/
+    ├── Dockerfile
+    ├── package.json
+    └── src/
+📝 compose.yaml
+
+Example:
+
+services:
+
+  backend:
+    build: ./BACKEND
+    container_name: backend
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./FRONTEND
+    container_name: frontend
+    ports:
+      - "5173:5173"
+
+This tells Docker Compose that our project contains two services:
+
+backend
+frontend
+
+Open the terminal inside the folder containing compose.yaml:
+docker compose up    =  uss folder ko open kro jisme compose.yml he usk terminl me chalo
+docker compose up --build  =   agr phirse chng kiaya compose yml file me to ye val cmnd
+ 
+🛑 Stop All Containers
+docker compose down
+
+This stops and removes the containers created by Compose.
+
+
+
 
 
