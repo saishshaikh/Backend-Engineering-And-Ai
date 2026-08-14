@@ -166,3 +166,93 @@ docker run -e PORT=5000 -p 5000:5000 test-image
 
 \
 ```
+
+# 🐳 Dockerize & Deploy Application to Docker Hub for Local Use to Another User
+
+This project demonstrates how to **Dockerize an application, upload the Docker image to Docker Hub, and allow another user to download and run the same application on their local machine.**
+
+## 1. Login to Docker Hub
+
+Login to Docker Hub from the terminal:
+
+```powershell
+docker login
+```
+
+Complete the browser-based authentication.
+
+## 2. Build the Docker Image
+
+Build your Docker image:
+
+```powershell
+docker build -t saishshaikh23/test-image .
+```
+
+Here:
+
+* `saishshaikh23` → Your Docker Hub username
+* `test-image` → Your Docker image/repository name
+* `.` → Current project directory
+
+> Replace `saishshaikh23` with your own Docker Hub username.
+
+## 3. Push Image to Docker Hub
+
+Upload the Docker image to your Docker Hub repository:
+
+```powershell
+docker push saishshaikh23/test-image
+```
+
+This publishes the Docker image to Docker Hub so that other users can access and use it.
+
+## 4. Pull Image from Docker Hub
+
+Another user can download the image on their local machine using:
+
+```powershell
+docker pull saishshaikh23/test-image
+```
+
+This downloads the Docker image from Docker Hub.
+
+## 5. Run the Container
+
+After pulling the image, run the application:
+
+```powershell
+docker run saishshaikh23/test-image
+```
+
+If the application uses port `3000`, run:
+
+```powershell
+docker run -p 3000:3000 saishshaikh23/test-image
+```
+
+## 🔄 Docker Workflow
+
+```text
+Application
+     ↓
+Dockerfile
+     ↓
+Build Image
+     ↓
+Push to Docker Hub
+     ↓
+Another User
+     ↓
+Pull Image
+     ↓
+Run Container Locally
+```
+
+## 🎯 Project Goal
+
+The goal is to package an application into a Docker image and **share it through Docker Hub so another user can easily pull and run the application on their own local machine.**
+
+
+
+
