@@ -254,7 +254,7 @@ Run Container Locally
 The goal is to package an application into a Docker image and **share it through Docker Hub so another user can easily pull and run the application on their own local machine.**
 
 
-🐳 Docker Compose – Build, Run & Push Multiple Containers Together
+#########🐳 Docker Compose – Build, Run & Push Multiple Containers Together############
 What is Docker Compose?
 
 Docker Compose is a tool that allows us to define and manage multiple Docker containers/services using a single compose.yaml file.
@@ -325,6 +325,8 @@ docker compose down
 
 This stops and removes the containers created by Compose.
 
+...
+########## DOKER NETWORK ##############
 
 
 
