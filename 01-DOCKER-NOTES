@@ -326,7 +326,214 @@ docker compose down
 This stops and removes the containers created by Compose.
 
 ...
-########## DOKER NETWORK ##############
+########## DOKER NETWORKING ##############
+
+# 🐳 Docker Networking — Short Notes
+
+## What is Docker Networking?
+
+Docker Networking allows **containers to communicate** with:
+
+* Other containers
+* Docker Host
+* Internet
+
+```text
+Container A ↔ Docker Network ↔ Container B
+```
+
+---
+
+## 1. Check Networks
+
+```bash
+docker network ls
+```
+
+Shows available networks.
+
+---
+
+## 2. Create Network
+
+```bash
+docker network create my-net
+```
+
+Creates a custom network.
+
+---
+
+## 3. Run Container on Network
+
+```bash
+docker run -d --name app --network my-net nginx
+```
+
+Container `app` joins `my-net`.
+
+---
+
+## 4. Container-to-Container Communication ⭐
+
+```bash
+docker run -d --name db --network my-net mysql
+```
+
+`app` can connect to:
+
+```text
+db:3306
+```
+
+✅ **Container name use karo, IP hardcode mat karo.**
+
+---
+
+## 5. Port Mapping ⭐
+
+```bash
+docker run -d -p 8080:80 nginx
+```
+
+Meaning:
+
+```text
+Host:8080 → Container:80
+```
+
+Browser:
+
+```text
+localhost:8080
+```
+
+---
+
+## 6. Important Network Drivers
+
+| Driver    | Use                               |
+| --------- | --------------------------------- |
+| `bridge`  | Normal container networking       |
+| `host`    | Container uses host network       |
+| `none`    | No networking                     |
+| `overlay` | Multi-host / Swarm                |
+| `macvlan` | Container appears on physical LAN |
+
+---
+
+## 7. Inspect Network
+
+```bash
+docker network inspect my-net
+```
+
+Shows:
+
+* Connected containers
+* IP addresses
+* Subnet
+* Gateway
+
+---
+
+## 8. Connect / Disconnect
+
+```bash
+docker network connect my-net app
+```
+
+```bash
+docker network disconnect my-net app
+```
+
+---
+
+## 9. Delete Network
+
+```bash
+docker network rm my-net
+```
+
+---
+
+## 10. `localhost` Important ⚠️
+
+Inside a container:
+
+```text
+localhost
+```
+
+means **that same container**, not another container.
+
+So:
+
+```text
+backend → db:3306
+```
+
+not:
+
+```text
+backend → localhost:3306
+```
+
+---
+
+## 11. `EXPOSE` vs `-p`
+
+```dockerfile
+EXPOSE 80
+```
+
+➡️ Indicates the container port.
+
+```bash
+-p 8080:80
+```
+
+➡️ Actually publishes/maps host port to container port.
+
+---
+
+# 🧠 Remember This
+
+```text
+Container ↔ Container
+       ↓
+Docker Network
+       ↓
+container/service name
+       ↓
+db:3306
+```
+
+```text
+Browser
+   ↓
+localhost:8080
+   ↓
+-p 8080:80
+   ↓
+Container:80
+```
+
+### ⭐ Most Used Commands
+
+```bash
+docker network ls
+docker network create my-net
+docker network inspect my-net
+docker network connect my-net app
+docker network disconnect my-net app
+docker network rm my-net
+```
+
+**Golden rule:** `User-defined bridge + service/container name + only required ports expose karo.`
+
+
+
 
 
 
