@@ -533,6 +533,62 @@ docker network rm my-net
 **Golden rule:** `User-defined bridge + service/container name + only required ports expose karo.`
 
 
+# Docker Volume 💾
+
+**Docker Volume = Container ka data permanently save karne ke liye.**
+
+Container delete/recreate hone par bhi **data safe** rehta hai.
+
+### Create
+
+```bash
+docker volume create mongo-data
+```
+
+### List
+
+```bash
+docker volume ls
+```
+
+### Use with Container
+
+```bash
+docker run -d \
+  --name mongo \
+  -v mongo-data:/data/db \
+  mongo
+```
+
+### Inspect
+
+```bash
+docker volume inspect mongo-data
+```
+
+### Delete
+
+```bash
+docker volume rm mongo-data
+```
+
+### MERN Example
+
+```text
+MongoDB Container
+       ↓
+Docker Volume
+       ↓
+Database Data 💾
+```
+
+**Remember:**
+
+```text
+Network → Containers ko connect 🔗
+Volume  → Data ko save 💾
+```
+
 
 
 
