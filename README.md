@@ -16,3 +16,8 @@ Backend Engineering, System Design, AI Engineering, Cloud & DevOps technologies 
 8. **Docker Networking**
 9. **Docker Volumes**
 10. **Dockerize & Deploy Application**
+
+# ⚡ Redis
+
+1. **API Catching**
+
