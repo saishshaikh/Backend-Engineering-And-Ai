@@ -207,11 +207,10 @@
 
 
 
-
 import express from "express";
 import dotenv from "dotenv";
 import Redis from "ioredis";
-import ratelimit from "./middlewaresratelimit.js";
+
 dotenv.config();
 
 const app = express();
@@ -227,7 +226,7 @@ app.use(express.json());
 // Redis
 // ==============================
 
-export const redis = new Redis(process.env.REDIS_URL);
+const redis = new Redis(process.env.REDIS_URL);
 
 redis.on("connect", () => {
     console.log("Redis connected successfully");
@@ -236,6 +235,43 @@ redis.on("connect", () => {
 redis.on("error", (error) => {
     console.error("Redis Error:", error.message);
 });
+
+// ==============================
+// Rate Limiter
+// ==============================
+
+const rateLimiter = async (req, res, next) => {
+    try {
+        const ip = req.ip;
+
+        const key = `rate_limit:${ip}`;
+
+        const requests = await redis.incr(key);
+
+        // First request → start 60 second timer
+        if (requests === 1) {
+            await redis.expire(key, 60);
+        }
+
+        // Maximum 5 requests per minute
+        if (requests > 5) {
+            return res.status(429).json({
+                success: false,
+                message: "Too Many Requests"
+            });
+        }
+
+        next();
+
+    } catch (error) {
+        console.error("Rate limiter error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Rate limiter error"
+        });
+    }
+};
 
 // ==============================
 // Home
