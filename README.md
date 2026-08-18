@@ -24,5 +24,5 @@ Backend Engineering, System Design, AI Engineering, Cloud & DevOps technologies 
 3. OTP Storage
 4. Rate Limiting
 5. Session Management
-6. Queues
+6. Queues + BullMQ
 7. AI Memory
