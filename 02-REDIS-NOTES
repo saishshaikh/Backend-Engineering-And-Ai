@@ -1,0 +1,153 @@
+# 🔴 Redis
+
+Redis ek **fast in-memory data store** hai jo data ko temporarily store karta hai, taaki data quickly access ho sake.
+
+## 1. Redis Basics
+
+Redis data ko **RAM (memory)** mein store karta hai, isliye traditional database ke comparison mein data bahut fast read/write hota hai.
+
+Common Redis data types:
+
+- String
+- List
+- Set
+- Hash
+- Sorted Set
+
+Important commands:
+
+`SET` `GET` `DEL` `EXPIRE` `TTL` `INCR`
+
+---
+
+## 2. API Caching
+
+API caching ka matlab hai frequently requested API data ko **Redis mein temporarily store karna**. Next request par data Redis se quickly mil jata hai, isliye MongoDB ko baar-baar query nahi karna padta.
+
+**Flow:**
+
+`API → Redis → MongoDB (cache miss hone par)`
+
+### Benefits
+
+- API fast hoti hai
+- MongoDB queries kam hoti hain
+- Database load kam hota hai
+
+---
+
+## 3. OTP Storage
+
+OTP ko Redis mein temporarily store kar sakte hain kyunki OTP ko permanently database mein rakhne ki zarurat nahi hoti.
+
+OTP ke saath **TTL** set kar dete hain, jaise 30 seconds. Time complete hone ke baad Redis automatically OTP delete kar deta hai.
+
+**Flow:**
+
+`Generate OTP → Redis → TTL → Verify OTP → Delete OTP`
+
+### Benefits
+
+- OTP quickly access hota hai
+- Automatic expiration
+- Database mein unnecessary data nahi rehta
+
+---
+
+## 4. Rate Limiting
+
+Rate limiting ka matlab hai kisi user/IP ko ek specific time mein limited requests allow karna.
+
+Example:
+
+`1 IP → 5 requests → 60 seconds`
+
+Redis request count maintain kar sakta hai using `INCR` aur `EXPIRE`.
+
+**Flow:**
+
+`Request → Redis Counter → Limit Check → Allow / Block`
+
+### Benefits
+
+- API abuse prevent hota hai
+- Brute-force attacks ko control kar sakte hain
+- Server load kam hota hai
+- OTP/API spam control hota hai
+
+---
+
+## 5. Session Management
+
+Session management mein user ki temporary login information Redis mein store ki ja sakti hai.
+
+Example:
+
+`Session ID → User ID / User Data`
+
+User login karta hai → session create hota hai → Redis mein store hota hai.
+
+**Flow:**
+
+`Login → Create Session → Redis → Session ID → User`
+
+### Benefits
+
+- Session data quickly access hota hai
+- Session expiration easily set kar sakte hain
+- Multiple servers ke saath sessions share kar sakte hain
+- Logout par session easily delete kar sakte hain
+
+---
+
+## 6. Queues
+
+Queue ka use background tasks ko process karne ke liye hota hai.
+
+Example: User ne email request ki. API ko email bhejne ke liye wait nahi karna padega. Job Redis queue mein chali jayegi aur background worker usko process karega.
+
+**Flow:**
+
+`API → Redis Queue → Worker → Task Complete`
+
+Example tasks:
+
+- Email sending
+- Notifications
+- Image processing
+- OTP/email jobs
+- Background processing
+
+### Benefits
+
+- API response fast hota hai
+- Heavy tasks background mein process hote hain
+- Failed jobs ko retry kar sakte hain
+- System scalable hota hai
+
+---
+
+## 7. AI Memory
+
+Redis ko AI applications mein **fast temporary memory** ke liye use kar sakte hain.
+
+Example: Chatbot ki recent conversation Redis mein store karna.
+
+**Flow:**
+
+`User Message → AI → Redis Memory → Previous Context → AI Response`
+
+Redis mein store kar sakte hain:
+
+- Recent conversations
+- User preferences
+- Chat history
+- Temporary AI context
+- Session information
+
+### Benefits
+
+- AI ko previous context quickly milta hai
+- Chatbot responses more contextual hote hain
+- Recent memory fast access hoti hai
+- TTL ke through temporary memory automatically expire kar sakte hain
