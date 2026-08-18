@@ -17,7 +17,12 @@ Backend Engineering, System Design, AI Engineering, Cloud & DevOps technologies 
 9. **Docker Volumes**
 10. **Dockerize & Deploy Application**
 
-# ⚡ Redis
+# 🔴 Redis 
 
-1. **API Catching**
-
+1. Redis Basics
+2. API Caching
+3. OTP Storage
+4. Rate Limiting
+5. Session Management
+6. Queues
+7. AI Memory
