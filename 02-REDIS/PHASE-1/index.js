@@ -207,176 +207,436 @@
 
 
 
+//  OTP store + expiry automatically.
+
+// import express from "express";
+// import dotenv from "dotenv";
+// import Redis from "ioredis";
+
+// dotenv.config();
+
+// const app = express();
+// const port = process.env.PORT || 8000;
+
+// // ==============================
+// // Middleware
+// // ==============================
+
+// app.use(express.json());
+
+// // ==============================
+// // Redis
+// // ==============================
+
+// const redis = new Redis(process.env.REDIS_URL);
+
+// redis.on("connect", () => {
+//     console.log("Redis connected successfully");
+// });
+
+// redis.on("error", (error) => {
+//     console.error("Redis Error:", error.message);
+// });
+
+// // ==============================
+// // Rate Limiter
+// // ==============================
+
+// const rateLimiter = async (req, res, next) => {
+//     try {
+//         const ip = req.ip;
+
+//         const key = `rate_limit:${ip}`;
+
+//         const requests = await redis.incr(key);
+
+//         // First request → start 60 second timer
+//         if (requests === 1) {
+//             await redis.expire(key, 60);
+//         }
+
+//         // Maximum 5 requests per minute
+//         if (requests > 5) {
+//             return res.status(429).json({
+//                 success: false,
+//                 message: "Too Many Requests"
+//             });
+//         }
+
+//         next();
+
+//     } catch (error) {
+//         console.error("Rate limiter error:", error);
+
+//         return res.status(500).json({
+//             success: false,
+//             message: "Rate limiter error"
+//         });
+//     }
+// };
+
+// // ==============================
+// // Home
+// // ==============================
+
+// app.get("/", (req, res) => {
+//     res.status(200).json({
+//         success: true,
+//         message: "OTP Server is running!"
+//     });
+// });
+
+// // ==============================
+// // SEND OTP
+// // ==============================
+
+// app.post("/send-otp", rateLimiter, async (req, res) => {
+//     try {
+//         const { email } = req.body;
+
+//         if (!email) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Email is required"
+//             });
+//         }
+
+//         // Generate 6 digit OTP
+//         const otp = Math.floor(
+//             100000 + Math.random() * 900000
+//         ).toString();
+
+//         // Store OTP for 30 seconds
+//         await redis.set(
+//             `otp:${email}`,
+//             otp,
+//             "EX",
+//             30
+//         );
+
+//         console.log(`OTP for ${email}: ${otp}`);
+
+//         return res.status(200).json({
+//             success: true,
+//             message: "OTP generated successfully",
+//             otp // Testing only
+//         });
+
+//     } catch (error) {
+//         console.error("Send OTP error:", error);
+
+//         return res.status(500).json({
+//             success: false,
+//             message: "Internal server error"
+//         });
+//     }
+// });
+
+// // ==============================
+// // VERIFY OTP
+// // ==============================
+
+// app.post("/verify-otp", rateLimiter, async (req, res) => {
+//     try {
+//         const { email, otp } = req.body;
+
+//         if (!email || !otp) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Email and OTP are required"
+//             });
+//         }
+
+//         // Get OTP from Redis
+//         const savedOtp = await redis.get(`otp:${email}`);
+
+//         if (!savedOtp) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "OTP expired or not found"
+//             });
+//         }
+
+//         // Check OTP
+//         if (savedOtp !== otp.toString()) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Invalid OTP"
+//             });
+//         }
+
+//         // Delete OTP after successful verification
+//         await redis.del(`otp:${email}`);
+
+//         return res.status(200).json({
+//             success: true,
+//             message: "OTP verified successfully"
+//         });
+
+//     } catch (error) {
+//         console.error("Verify OTP error:", error);
+
+//         return res.status(500).json({
+//             success: false,
+//             message: "Internal server error"
+//         });
+//     }
+// });
+
+// // ==============================
+// // START SERVER
+// // ==============================
+
+// app.listen(port, () => {
+//     console.log(`Server running on port ${port}`);
+// });
+
+
+
+
+// for queuee 
+
+// without queue
+
+// import express from "express";
+// import dotenv from "dotenv";
+// import Redis from "ioredis";
+
+// import { MongoDbconnect } from "./config/db.js";
+// import User from "./Models/user.model.js";
+// import sendemail from "../config/sendeamil.js";
+
+// dotenv.config();
+// export const redis = new Redis();
+
+// const app = express();
+// const port = process.env.PORT || 5000;
+
+// // Middleware
+// app.use(express.json());
+
+
+// // ==============================
+// // HOME
+// // ==============================
+
+// app.get("/", (req, res) => {
+//     res.status(200).json({
+//         success: true,
+//         message: "Server is running!"
+//     });
+// });
+
+
+// // ==============================
+// // CREATE USER
+// // ==============================
+
+// app.post("/create-user", async (req, res) => {
+//     try {
+//         const { name, email, password } = req.body;
+
+//         // Validation
+//         if (!name || !email || !password) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Name, email and password are required"
+//             });
+//         }
+
+//         // Create user in MongoDB
+//         const user = await User.create({
+//             name,
+//             email,
+//             password
+//         });
+
+//         // Delete old users cache
+//         await redis.del("users:all");
+
+//         return res.status(201).json({
+//             success: true,
+//             message: "User created successfully",
+//             user: {
+//                 id: user._id,
+//                 name: user.name,
+//                 email: user.email
+//             }
+//         });
+//         sendemail()
+
+//     } catch (error) {
+//         console.error("Create user error:", error);
+
+//         return res.status(500).json({
+//             success: false,
+//             message: "Failed to create user"
+//         });
+//     }
+// });
+
+
+// // ==============================
+// // GET USERS
+// // ==============================
+
+// app.get("/users", async (req, res) => {
+//     try {
+//         const users = await User
+//             .find()
+//             .select("-password");
+
+//         return res.status(200).json({
+//             success: true,
+//             message: "Users fetched successfully",
+//             users
+//         });
+
+//     } catch (error) {
+//         console.error("Get users error:", error);
+
+//         return res.status(500).json({
+//             success: false,
+//             message: "Failed to fetch users"
+//         });
+//     }
+// });
+
+
+// // ==============================
+// // START SERVER
+// // ==============================
+
+// const startServer = async () => {
+//     try {
+//         await MongoDbconnect();
+
+//         app.listen(port, () => {
+//             console.log(`Server running on port ${port}`);
+//         });
+
+//     } catch (error) {
+//         console.error(
+//             "Failed to start server:",
+//             error.message
+//         );
+
+//         process.exit(1);
+//     }
+// };
+
+// startServer();
+
+
+
+
+// ############# WITH QUEUE  ####################
+
+
 import express from "express";
 import dotenv from "dotenv";
 import Redis from "ioredis";
 
+import { MongoDbconnect } from "./config/db.js";
+import User from "./Models/user.model.js";
+import { emailQueue } from "./queue.js";
+
 dotenv.config();
 
+export const redis = new Redis(
+    process.env.REDIS_URL || "redis://localhost:6379"
+);
+
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 // ==============================
-// Middleware
+// MIDDLEWARE
 // ==============================
 
 app.use(express.json());
 
 // ==============================
-// Redis
-// ==============================
-
-const redis = new Redis(process.env.REDIS_URL);
-
-redis.on("connect", () => {
-    console.log("Redis connected successfully");
-});
-
-redis.on("error", (error) => {
-    console.error("Redis Error:", error.message);
-});
-
-// ==============================
-// Rate Limiter
-// ==============================
-
-const rateLimiter = async (req, res, next) => {
-    try {
-        const ip = req.ip;
-
-        const key = `rate_limit:${ip}`;
-
-        const requests = await redis.incr(key);
-
-        // First request → start 60 second timer
-        if (requests === 1) {
-            await redis.expire(key, 60);
-        }
-
-        // Maximum 5 requests per minute
-        if (requests > 5) {
-            return res.status(429).json({
-                success: false,
-                message: "Too Many Requests"
-            });
-        }
-
-        next();
-
-    } catch (error) {
-        console.error("Rate limiter error:", error);
-
-        return res.status(500).json({
-            success: false,
-            message: "Rate limiter error"
-        });
-    }
-};
-
-// ==============================
-// Home
+// HOME
 // ==============================
 
 app.get("/", (req, res) => {
     res.status(200).json({
         success: true,
-        message: "OTP Server is running!"
+        message: "Server is running!",
     });
 });
 
 // ==============================
-// SEND OTP
+// CREATE USER
 // ==============================
 
-app.post("/send-otp", rateLimiter, async (req, res) => {
+app.post("/create-user", async (req, res) => {
     try {
-        const { email } = req.body;
+        const { name, email, password } = req.body;
 
-        if (!email) {
+        // Validation
+        if (!name || !email || !password) {
             return res.status(400).json({
                 success: false,
-                message: "Email is required"
+                message: "Name, email and password are required",
             });
         }
 
-        // Generate 6 digit OTP
-        const otp = Math.floor(
-            100000 + Math.random() * 900000
-        ).toString();
-
-        // Store OTP for 30 seconds
-        await redis.set(
-            `otp:${email}`,
-            otp,
-            "EX",
-            30
-        );
-
-        console.log(`OTP for ${email}: ${otp}`);
-
-        return res.status(200).json({
-            success: true,
-            message: "OTP generated successfully",
-            otp // Testing only
+        // Create user in MongoDB
+        const user = await User.create({
+            name,
+            email,
+            password,
         });
 
+        // Delete old users cache
+        await redis.del("users:all");
+
+        // Add email job to BullMQ
+        await emailQueue.add("send-welcome-email", {
+            email: user.email,
+            name: user.name,
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "User created successfully",
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+            },
+        });
     } catch (error) {
-        console.error("Send OTP error:", error);
+        console.error("Create user error:", error);
 
         return res.status(500).json({
             success: false,
-            message: "Internal server error"
+            message: "Failed to create user",
         });
     }
 });
 
 // ==============================
-// VERIFY OTP
+// GET USERS
 // ==============================
 
-app.post("/verify-otp", rateLimiter, async (req, res) => {
+app.get("/users", async (req, res) => {
     try {
-        const { email, otp } = req.body;
-
-        if (!email || !otp) {
-            return res.status(400).json({
-                success: false,
-                message: "Email and OTP are required"
-            });
-        }
-
-        // Get OTP from Redis
-        const savedOtp = await redis.get(`otp:${email}`);
-
-        if (!savedOtp) {
-            return res.status(400).json({
-                success: false,
-                message: "OTP expired or not found"
-            });
-        }
-
-        // Check OTP
-        if (savedOtp !== otp.toString()) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid OTP"
-            });
-        }
-
-        // Delete OTP after successful verification
-        await redis.del(`otp:${email}`);
+        const users = await User.find().select("-password");
 
         return res.status(200).json({
             success: true,
-            message: "OTP verified successfully"
+            message: "Users fetched successfully",
+            users,
         });
-
     } catch (error) {
-        console.error("Verify OTP error:", error);
+        console.error("Get users error:", error);
 
         return res.status(500).json({
             success: false,
-            message: "Internal server error"
+            message: "Failed to fetch users",
         });
     }
 });
@@ -385,6 +645,27 @@ app.post("/verify-otp", rateLimiter, async (req, res) => {
 // START SERVER
 // ==============================
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
+const startServer = async () => {
+    try {
+        // MongoDB connection
+        await MongoDbconnect();
+
+        // Redis connection
+        await redis.ping();
+        console.log("Redis connected successfully");
+
+        // Start server
+        app.listen(port, () => {
+            console.log(`Server running on port ${port}`);
+        });
+    } catch (error) {
+        console.error(
+            "Failed to start server:",
+            error.message
+        );
+
+        process.exit(1);
+    }
+};
+
+startServer();
