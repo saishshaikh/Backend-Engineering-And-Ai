@@ -1,6 +1,7 @@
-
 services:
   nginx:
     image: nginx
     ports:
       - "8000:80"
+    volumes:
+      - ./nginx/nginx.config:/etc/nginx/nginx.conf:ro
