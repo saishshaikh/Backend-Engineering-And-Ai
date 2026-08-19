@@ -35,9 +35,10 @@ Backend Engineering, System Design, AI Engineering, Cloud & DevOps technologies 
 1. **System Design Fundamentals**
 2. **Scaling Concepts**
 3. **Nginx & Load Balancing**
-4. **Microservices Architecture**
-5. **Database Replication**
-6. **Database Sharding**
+4. **Monolith Architecture**
+5. **Microservices Architecture**
+6. **Database Replication**
+7. **Database Sharding**
 
 # ☁️ AWS & Production
 
