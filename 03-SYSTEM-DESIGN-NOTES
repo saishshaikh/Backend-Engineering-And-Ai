@@ -1,1 +1,128 @@
 
+# 🚀 System Design — Nginx
+
+## 1. 🏢 Monolithic Architecture
+
+```text
+        Client
+          │
+          ▼
+   ┌──────────────┐
+   │  Monolithic  │
+   │ Application  │
+   │              │
+   │ Auth         │
+   │ Users        │
+   │ Orders       │
+   └──────┬───────┘
+          │
+          ▼
+      Database
+```
+
+**Monolith:** Everything runs as a single application.
+
+---
+
+## 2. 🧩 Microservices Architecture
+
+```text
+             Client
+                │
+                ▼
+           ┌─────────┐
+           │  Nginx  │
+           └────┬────┘
+                │
+       ┌────────┼────────┐
+       ▼        ▼        ▼
+    Auth     User      Order
+   Service   Service   Service
+```
+
+**Microservices:** Application is divided into independent services.
+
+---
+
+## 3. 🌐 Nginx Reverse Proxy
+
+```text
+Client
+  │
+  │ HTTP Request
+  ▼
+┌─────────────┐
+│    Nginx    │
+│Reverse Proxy│
+└──────┬──────┘
+       │
+       ▼
+ Backend Server
+```
+
+Nginx receives the client request and forwards it to the backend.
+
+---
+
+## 4. ⚖️ Nginx Load Balancer
+
+```text
+                  Client
+                    │
+                    ▼
+              ┌──────────┐
+              │  Nginx   │
+              │   LB     │
+              └────┬─────┘
+                   │
+        ┌──────────┼──────────┐
+        ▼          ▼          ▼
+    Backend 1  Backend 2  Backend 3
+```
+
+Nginx distributes traffic between multiple backend instances.
+
+---
+
+# 🛠️ Useful Nginx Commands
+
+### Check Nginx version
+
+```bash
+nginx -v
+```
+
+### Test configuration
+
+```bash
+nginx -t
+```
+
+### Reload configuration
+
+```bash
+nginx -s reload
+```
+
+### Start Nginx
+
+```bash
+nginx
+```
+
+### Stop Nginx
+
+```bash
+nginx -s stop
+```
+
+### Check running process
+
+```bash
+ps aux | grep nginx
+```
+
+---
+
+
+```
